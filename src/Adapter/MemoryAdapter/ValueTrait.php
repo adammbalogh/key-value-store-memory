@@ -19,18 +19,7 @@ trait ValueTrait
      */
     public function get($key)
     {
-        if (!array_key_exists($key, $this->store)) {
-            throw new KeyNotFoundException();
-        }
-
-        $getResult = $this->store[$key];
-        $unserialized = @unserialize($getResult);
-
-        if (Util::hasInternalExpireTime($unserialized)) {
-            $getResult = $unserialized['v'];
-        }
-
-        return $getResult;
+        return $this->getValue($key);
     }
 
     /**
@@ -49,6 +38,31 @@ trait ValueTrait
     }
 
     /**
+     * Gets value, watches expiring.
+     *
+     * @param string $key
+     *
+     * @throws KeyNotFoundException
+     */
+    protected function getValue($key)
+    {
+        if (!array_key_exists($key, $this->store)) {
+            throw new KeyNotFoundException();
+        }
+
+        $getResult = $this->store[$key];
+        $unserialized = @unserialize($getResult);
+
+        if (Util::hasInternalExpireTime($unserialized)) {
+            $this->handleTtl($key, $unserialized['ts'], $unserialized['s']);
+
+            $getResult = $unserialized['v'];
+        }
+
+        return $getResult;
+    }
+
+    /**
      * If ttl is lesser or equals 0 delete key.
      *
      * @param string $key
@@ -63,7 +77,8 @@ trait ValueTrait
     {
         $ttl = $expireSetTs + $expireSec - time();
         if ($ttl <= 0) {
-            $this->delete($key);
+            unset($this->store[$key]);
+
             throw new KeyNotFoundException();
         }
 

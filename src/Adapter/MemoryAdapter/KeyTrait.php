@@ -17,13 +17,15 @@ trait KeyTrait
      */
     public function delete($key)
     {
-        if (array_key_exists($key, $this->store)) {
-            unset($this->store[$key]);
-
-            return true;
+        try {
+            $this->get($key);
+        } catch (KeyNotFoundException $e) {
+            return false;
         }
 
-        return false;
+        unset($this->store[$key]);
+
+        return true;
     }
 
     /**
@@ -80,7 +82,13 @@ trait KeyTrait
      */
     public function has($key)
     {
-        return array_key_exists($key, $this->store);
+        try {
+            $this->get($key);
+        } catch (KeyNotFoundException $e) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
