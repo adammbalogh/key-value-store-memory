@@ -42,6 +42,8 @@ trait ValueTrait
      *
      * @param string $key
      *
+     * @return mixed
+     *
      * @throws KeyNotFoundException
      */
     protected function getValue($key)
