@@ -126,8 +126,6 @@ class KeyTraitTest extends AbstractKvsMemoryTestCase
     }
 
     /**
-     * @expectedException \Exception
-     *
      * @dataProvider kvsProvider
      *
      * @param KeyValueStore $kvs
@@ -137,7 +135,7 @@ class KeyTraitTest extends AbstractKvsMemoryTestCase
     {
         $kvs->set('key', 555);
 
-        $kvs->persist('key');
+        $this->assertFalse($kvs->persist('key'));
     }
 
     /**
