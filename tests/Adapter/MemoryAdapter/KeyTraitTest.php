@@ -12,6 +12,18 @@ class KeyTraitTest extends AbstractKvsMemoryTestCase
      * @param KeyValueStore $kvs
      * @param MemoryAdapter $memoryAdapter
      */
+    public function testKeyFromParameter(KeyValueStore $kvs, MemoryAdapter $memoryAdapter)
+    {
+        $this->assertTrue($kvs->has('key_param'));
+        $this->assertEquals($kvs->get('key_param'), 666);
+    }
+
+    /**
+     * @dataProvider kvsProvider
+     *
+     * @param KeyValueStore $kvs
+     * @param MemoryAdapter $memoryAdapter
+     */
     public function testDelete(KeyValueStore $kvs, MemoryAdapter $memoryAdapter)
     {
         $kvs->set('key', 555);
