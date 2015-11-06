@@ -19,6 +19,14 @@ class MemoryAdapter extends AbstractAdapter
     protected $store = [];
 
     /**
+     * @param array $store
+     */
+    public function __construct($store = [])
+    {
+        $this->store = $store;
+    }
+
+    /**
      * @return null
      */
     public function getClient()
